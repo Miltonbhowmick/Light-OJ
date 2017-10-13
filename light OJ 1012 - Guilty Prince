@@ -1,0 +1,47 @@
+#include<bits/stdc++.h>
+
+using namespace std;
+vector < int > adj[500];
+bool vis[500];
+char grid[500];
+int ans;
+void dfs(int u){
+    ans++;
+    vis[u]=true;
+    int sz=adj[u].size();
+    for(int i=0;i<sz;i++){
+        if(!vis[adj[u][i]])
+            dfs(adj[u][i]);
+    }
+}
+int main()
+{
+    memset(vis,false,sizeof(vis));
+    int t,h,w,ln,pos;
+    scanf("%d",&t);
+    for(int j=1;j<=t;j++){
+        ans=0;
+        cin>>w>>h;
+        ln=w*h;
+        for(int i=1;i<=ln;i++){
+            cin>>grid[i];
+            if(grid[i]=='@') pos=i;
+        }
+        for(int i=1;i<=ln;i++){
+            if(grid[i]!='#'){
+                if(grid[i+1]=='.'&&((i+1)%w)!=1&&w!=1) adj[i].push_back(i+1);
+                if(grid[i-1]=='.'&&((i-1)%w)!=0) adj[i].push_back(i-1);
+                if(grid[i-w]=='.'&&(i-w)>0) adj[i].push_back(i-w);
+                if(grid[i+w]=='.'&&(i+w)<=ln) adj[i].push_back(i+w);
+            }
+        }
+        dfs(pos);
+        printf("Case %d: %d\n",j,ans);
+        for(int i=1;i<=ln;i++){
+            adj[i].clear();
+            vis[i]=false;
+        }
+    }
+    return 0;
+}
+
